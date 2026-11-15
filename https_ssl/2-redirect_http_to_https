@@ -1,0 +1,1 @@
+    http-request redirect scheme https code 301 unless { ssl_fc }

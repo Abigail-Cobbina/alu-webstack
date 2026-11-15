@@ -1,0 +1,24 @@
+global
+    log /dev/log local0
+    maxconn 2048
+    user haproxy
+    group haproxy
+    daemon
+
+defaults
+    log global
+    mode http
+    option httplog
+    timeout connect 5000
+    timeout client 50000
+    timeout server 50000
+
+frontend http_front
+    bind *:80
+    bind *:443 ssl crt /etc/haproxy/certs/www.DOMAIN.pem
+    default_backend http_back
+
+backend http_back
+    balance roundrobin
+    server 7262-web-01 WEB01_IP:80 check
+    server 7262-web-02 WEB02_IP:80 check
