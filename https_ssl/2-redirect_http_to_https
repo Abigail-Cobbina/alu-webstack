@@ -1,1 +1,22 @@
+global
+    maxconn 2048
+    user haproxy
+    group haproxy
+    daemon
+
+defaults
+    mode http
+    timeout connect 5000
+    timeout client 50000
+    timeout server 50000
+
+frontend http_front
+    bind *:80
+    bind *:443 ssl crt /etc/haproxy/certs/www.abigailcobbina.tech.pem
     http-request redirect scheme https code 301 unless { ssl_fc }
+    default_backend http_back
+
+backend http_back
+    balance roundrobin
+    server 7262-web-01 13.135.203.140:80 check
+    server 7262-web-02 16.60.187.71:80 check
